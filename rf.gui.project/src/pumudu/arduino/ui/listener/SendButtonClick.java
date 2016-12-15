@@ -20,7 +20,7 @@ public class SendButtonClick implements ActionListener {
     JRadioButton is315Mhz;
 
     public SendButtonClick(JTextField pulseLength, JTextField binaryString, JTextField protocolType,
-                           JTextField repeatIterations, JRadioButton a315MHz, JRadioButton a433MHz) {
+                           JTextField repeatIterations, JRadioButton a433MHz, JRadioButton a315MHz) {
         this.binaryCode = binaryString;
         this.pulseLength = pulseLength;
         this.protocolType = protocolType;
