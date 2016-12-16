@@ -21,15 +21,15 @@ public class OutboundSerialSender {
 
 
     public void sendStringData(String binaryCode, String pulseLength, String protocolType, String repeatIterations,
-                               boolean is433MHz, boolean is315Mhz) {
+                               boolean is433MHz, boolean is315Mhz, String pinNumber433Mhz, String pinNumber315Mhz) {
 
         // Default transmit pin set to 433.92MHz
         String rfTransmitPin = RF_433MHz_TRANSMIT_PINOUT;
 
         if(is433MHz) {
-            rfTransmitPin = RF_433MHz_TRANSMIT_PINOUT;
+            rfTransmitPin = pinNumber433Mhz;
         } else if(is315Mhz) {
-            rfTransmitPin = RF_315MHz_TRANSMIT_PINOUT;
+            rfTransmitPin = pinNumber315Mhz;
         }
 
         // send data

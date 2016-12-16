@@ -19,8 +19,13 @@ public class SendButtonClick implements ActionListener {
     JRadioButton is433MHz;
     JRadioButton is315Mhz;
 
+    // Configurations
+    JTextField pin433Mhz;
+    JTextField pin315Mhz;
+
     public SendButtonClick(JTextField pulseLength, JTextField binaryString, JTextField protocolType,
-                           JTextField repeatIterations, JRadioButton a433MHz, JRadioButton a315MHz) {
+                           JTextField repeatIterations, JRadioButton a433MHz, JRadioButton a315MHz,
+                           JTextField pin433Mhz, JTextField pin315Mhz) {
         this.binaryCode = binaryString;
         this.pulseLength = pulseLength;
         this.protocolType = protocolType;
@@ -28,6 +33,10 @@ public class SendButtonClick implements ActionListener {
 
         this.is315Mhz = a315MHz;
         this.is433MHz = a433MHz;
+
+        this.pin315Mhz = pin315Mhz;
+        this.pin433Mhz = pin433Mhz;
+
     }
 
     @Override
@@ -38,7 +47,8 @@ public class SendButtonClick implements ActionListener {
                 new OutboundSerialSender(SerialPortImpl.getInstance().getSerialPort());
 
         outboundSerialSender.sendStringData(binaryCode.getText(), pulseLength.getText(), protocolType.getText(),
-                    repeatIterations.getText(), is433MHz.isSelected(), is315Mhz.isSelected());
+                    repeatIterations.getText(), is433MHz.isSelected(), is315Mhz.isSelected(), pin433Mhz.getText(),
+                    pin315Mhz.getText());
 
 
     }
