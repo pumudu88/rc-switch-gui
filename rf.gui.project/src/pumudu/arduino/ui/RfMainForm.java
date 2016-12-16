@@ -50,7 +50,7 @@ public class RfMainForm {
 
     private void initialize() {
         // Disable transmit tab when starting up the form. No point of accessing transmit tab before connect.
-//        mainTabbedPane.setEnabledAt(1,false);
+        mainTabbedPane.setEnabledAt(1,false);
 
         // Group radio buttons
         ButtonGroup bg1 = new ButtonGroup();

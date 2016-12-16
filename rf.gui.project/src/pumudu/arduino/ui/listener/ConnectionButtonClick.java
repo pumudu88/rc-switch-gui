@@ -2,6 +2,7 @@ package pumudu.arduino.ui.listener;
 
 import gnu.io.CommPortIdentifier;
 import gnu.io.PortInUseException;
+import gnu.io.SerialPort;
 import gnu.io.UnsupportedCommOperationException;
 import pumudu.arduino.serial.ConnectionImpl;
 import pumudu.arduino.serial.InboundSerialEventListener;
@@ -10,6 +11,7 @@ import pumudu.arduino.serial.SerialPortImpl;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.Enumeration;
 import javax.swing.*;
 
@@ -43,12 +45,39 @@ public class ConnectionButtonClick implements ActionListener {
 
         Enumeration portEnumeration = connection.getComPortObjects();
 
-        while (portEnumeration.hasMoreElements()) {
-            CommPortIdentifier portId = (CommPortIdentifier) portEnumeration.nextElement();
-            if (portId.getName().contentEquals(serialPortSelector.getSelectedItem().toString())) {
-                System.out.println("PORT MATCHED!!!");
-                portConnect(portId);
-                break;
+        if (connectButton.getText().contentEquals("Disconnect")) {
+            // Disconnect any serial connection already established.
+            portDisconnect();
+        } else {
+            while (portEnumeration.hasMoreElements()) {
+                CommPortIdentifier portId = (CommPortIdentifier) portEnumeration.nextElement();
+                if (portId.getName().contentEquals(serialPortSelector.getSelectedItem().toString())) {
+                    System.out.println("PORT MATCHED!!!");
+                    // Connect to selected serial port.
+                    portConnect(portId);
+                    break;
+                }
+            }
+        }
+    }
+
+    private void portDisconnect() {
+        SerialPort serialPort = SerialPortImpl.getInstance().getSerialPort();
+
+        try {
+            if(serialPort != null) {
+                serialPort.getOutputStream().close();
+                serialPort.getInputStream().close();
+            }
+        } catch (IOException e) {
+            System.out.println("Disconnecting serial connection..");
+            e.printStackTrace();
+        } finally {
+            connectionStatus.setText("Ready to connect");
+            connectionStatus.setForeground(new Color(0, 0, 0));
+            connectButton.setText("Connect");
+            if(serialPort != null) {
+                SerialPortImpl.getInstance().getSerialPort().close();
             }
         }
     }
@@ -80,22 +109,17 @@ public class ConnectionButtonClick implements ActionListener {
             System.out.println(e3.toString());
         }
 
-
-
-        // send/receive data bellow
-
         SerialPortImpl.getInstance().getSerialPort().notifyOnDataAvailable(true);
         SerialPortImpl.getInstance().getSerialPort().notifyOnOutputEmpty(true);
 
-//        wait till ardiuno finish initializing connection established
+//        wait till arduino finish initializing connection established
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        //input channel
-        //First create the listener to make sure we don't miss out listening
+        //Create the listener to make sure we don't miss out listening
         InboundSerialEventListener inboundSerialEventListener =
                 new InboundSerialEventListener(SerialPortImpl.getInstance().getSerialPort());
 
