@@ -30,6 +30,7 @@ public class RfMainForm {
     private JRadioButton a315MHzRadioButton;
     private JTextField pin433Mhz;
     private JTextField pin315Mhz;
+    private JProgressBar sendSerialProgress;
 
 
     public RfMainForm() {
@@ -44,7 +45,8 @@ public class RfMainForm {
 
         // Transmit tab action listeners
         sendButton.addActionListener(new SendButtonClick(pulseLength,binaryString,protocolType,
-                                        repeatIterations,a43392MHzRadioButton,a315MHzRadioButton,pin433Mhz,pin315Mhz));
+                                        repeatIterations,a43392MHzRadioButton,a315MHzRadioButton,
+                                        pin433Mhz,pin315Mhz,sendSerialProgress));
 
     }
 
