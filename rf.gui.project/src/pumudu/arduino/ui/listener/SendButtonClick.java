@@ -5,7 +5,7 @@ import pumudu.arduino.serial.SerialPortImpl;
 import pumudu.arduino.ui.utils.TrackSendSerialProgress;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.*;
+import java.awt.event.ActionListener;
 import javax.swing.*;
 
 /**
@@ -62,7 +62,5 @@ public class SendButtonClick implements ActionListener {
         // Track sending progress through progress bar
         progressTask = new TrackSendSerialProgress(serialProgress);
         progressTask.start();
-
-
     }
 }
