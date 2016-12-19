@@ -7,6 +7,7 @@ import gnu.io.UnsupportedCommOperationException;
 import pumudu.arduino.serial.ConnectionImpl;
 import pumudu.arduino.serial.InboundSerialEventListener;
 import pumudu.arduino.serial.SerialPortImpl;
+import pumudu.arduino.ui.utils.TextFieldValidators;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -49,14 +50,24 @@ public class ConnectionButtonClick implements ActionListener {
             // Disconnect any serial connection already established.
             portDisconnect();
         } else {
-            while (portEnumeration.hasMoreElements()) {
-                CommPortIdentifier portId = (CommPortIdentifier) portEnumeration.nextElement();
-                if (portId.getName().contentEquals(serialPortSelector.getSelectedItem().toString())) {
-                    System.out.println("PORT MATCHED!!!");
-                    // Connect to selected serial port.
-                    portConnect(portId);
-                    break;
+
+            // Validate user inputs
+            if(TextFieldValidators.validateStringForIntegers(baudRate.getText())) {
+
+                // Search through all available serial ports to match selected serial port.
+                // This is important as device can be unplugged after selecting the serial port from drop down.
+                while (portEnumeration.hasMoreElements()) {
+                    CommPortIdentifier portId = (CommPortIdentifier) portEnumeration.nextElement();
+                    if (portId.getName().contentEquals(serialPortSelector.getSelectedItem().toString())) {
+                        System.out.println("Selected port is available to connect.");
+                        // Connect to selected serial port.
+                        portConnect(portId);
+                        break;
+                    }
                 }
+            } else {
+                connectionStatus.setText("Input validation failed.");
+                connectionStatus.setForeground(new Color(255, 0, 0));
             }
         }
     }

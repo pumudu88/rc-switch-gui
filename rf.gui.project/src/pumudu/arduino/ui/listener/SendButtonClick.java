@@ -2,6 +2,7 @@ package pumudu.arduino.ui.listener;
 
 import pumudu.arduino.serial.OutboundSerialSender;
 import pumudu.arduino.serial.SerialPortImpl;
+import pumudu.arduino.ui.utils.TextFieldValidators;
 import pumudu.arduino.ui.utils.TrackSendSerialProgress;
 
 import java.awt.event.ActionEvent;
@@ -51,16 +52,24 @@ public class SendButtonClick implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        // Output channel
-        OutboundSerialSender outboundSerialSender =
-                new OutboundSerialSender(SerialPortImpl.getInstance().getSerialPort());
+        // Validate user inputs
+        if(TextFieldValidators.validateStringForIntegers(pulseLength.getText()) &&
+           TextFieldValidators.validateStringForIntegers(protocolType.getText()) &&
+           TextFieldValidators.validateStringForIntegers(repeatIterations.getText())) {
 
-        outboundSerialSender.sendStringData(binaryCode.getText(), pulseLength.getText(), protocolType.getText(),
+            // Output channel
+            OutboundSerialSender outboundSerialSender =
+                    new OutboundSerialSender(SerialPortImpl.getInstance().getSerialPort());
+
+            outboundSerialSender.sendStringData(binaryCode.getText(), pulseLength.getText(), protocolType.getText(),
                     repeatIterations.getText(), is433MHz.isSelected(), is315Mhz.isSelected(), pin433Mhz.getText(),
                     pin315Mhz.getText());
 
-        // Track sending progress through progress bar
-        progressTask = new TrackSendSerialProgress(serialProgress);
-        progressTask.start();
+            // Track sending progress through progress bar
+            progressTask = new TrackSendSerialProgress(serialProgress);
+            progressTask.start();
+        } else {
+            System.out.println("Transmit input validation failed.");
+        }
     }
 }
